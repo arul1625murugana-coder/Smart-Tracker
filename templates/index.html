@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SmartSpend AI</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+    <div class="app">
+
+        <!-- SIDEBAR -->
+
+        <aside class="sidebar">
+
+            <div class="brand">
+
+                <div class="logo">S</div>
+
+                <div>
+                    <strong>SmartSpend</strong>
+                    <span>AI Finance</span>
+                </div>
+
+            </div>
+
+
+            <nav>
+
+                <button class="nav active" data-page="dashboard">
+                    🏠 Dashboard
+                </button>
+
+
+                <div class="section-title">
+                    💰 INCOME
+                </div>
+
+                <button class="nav sub" data-page="income">
+                    ＋ Add Income
+                </button>
+
+                <button class="nav sub" data-page="income">
+                    ↳ Income History
+                </button>
+
+
+                <div class="section-title">
+                    ➕ EXPENSES
+                </div>
+
+                <button class="nav sub" data-page="expenses">
+                    ＋ Add Expense
+                </button>
+
+                <button class="nav sub" data-page="expenses">
+                    ↳ Expense History
+                </button>
+
+                <button class="nav sub" data-page="recurring">
+                    🔄 Recurring Expenses
+                </button>
+
+
+                <div class="section-title">
+                    📊 ANALYTICS
+                </div>
+
+                <button class="nav sub" data-page="analytics">
+                    📅 Daily Analysis
+                </button>
+
+                <button class="nav sub" data-page="analytics">
+                    📆 Weekly Analysis
+                </button>
+
+                <button class="nav sub" data-page="analytics">
+                    🗓️ Monthly Analysis
+                </button>
+
+                <button class="nav sub" data-page="analytics">
+                    🏷️ Category Analysis
+                </button>
+
+
+                <div class="section-title">
+                    🤖 AI ANALYSIS
+                </div>
+
+                <button class="nav sub" data-page="ai">
+                    ✨ Spending Insights
+                </button>
+
+                <button class="nav sub" data-page="ai">
+                    📈 Spending Prediction
+                </button>
+
+                <button class="nav sub" data-page="ai">
+                    💡 Saving Suggestions
+                </button>
+
+                <button class="nav sub" data-page="ai">
+                    🧠 AI Financial Summary
+                </button>
+
+
+                <div class="section-title">
+                    🎯 BUDGET
+                </div>
+
+                <button class="nav sub" data-page="budget">
+                    Monthly Budget
+                </button>
+
+                <button class="nav sub" data-page="budget">
+                    Category Budget
+                </button>
+
+                <button class="nav sub" data-page="budget">
+                    Savings Goal
+                </button>
+
+
+                <div class="section-title">
+                    📈 REPORTS
+                </div>
+
+                <button class="nav sub" data-page="reports">
+                    Monthly Report
+                </button>
+
+                <button class="nav sub" data-page="reports">
+                    AI Report
+                </button>
+
+
+                <div class="section-title">
+                    📥 EXPORT
+                </div>
+
+                <button class="nav sub" data-page="reports">
+                    Excel / PDF / Print
+                </button>
+
+
+                <button class="nav" data-page="calculator">
+                    🧮 Calculator
+                </button>
+
+                <button class="nav" data-page="notifications">
+                    🔔 Notifications
+                </button>
+
+                <button class="nav" data-page="settings">
+                    ⚙️ Settings
+                </button>
+
+                <button class="nav" data-page="help">
+                    ❓ Help & Support
+                </button>
+
+            </nav>
+
+
+            <button class="logout" onclick="resetData()">
+                🚪 Reset / Clear Data
+            </button>
+
+        </aside>
+
+
+        <!-- MAIN -->
+
+        <main class="main">
+
+            <header class="topbar">
+
+                <div class="search">
+
+                    🔍
+
+                    <input id="globalSearch" placeholder="Search expenses, reasons, categories...">
+
+                </div>
+
+                <div class="top-actions">
+
+                    <button id="themeBtn">
+                        🌙
+                    </button>
+
+                    <button>
+                        🔔
+                    </button>
+
+                    <div class="avatar">
+                        A
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- DASHBOARD -->
+
+            <section id="dashboard" class="page active">
+
+                <div class="hero">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            SMART FINANCE DASHBOARD
+                        </p>
+
+                        <h1>
+                            Good to see you 👋
+                        </h1>
+
+                        <p>
+                            Track your money, understand your habits
+                            and plan smarter.
+                        </p>
+
+                    </div>
+
+                    <div id="clock"></div>
+
+                </div>
+
+
+                <!-- QUICK OPTIONS -->
+
+                <div class="quick-actions">
+
+                    <button onclick="openExpense()">
+                        ➕ Add Expense
+                    </button>
+
+                    <button onclick="openIncome()">
+                        💰 Add Income
+                    </button>
+
+                    <button onclick="showPage('analytics')">
+                        📊 Analytics
+                    </button>
+
+                    <button onclick="showPage('ai')">
+                        🤖 AI Analysis
+                    </button>
+
+                    <button onclick="showPage('reports')">
+                        📄 Generate Report
+                    </button>
+
+                    <button onclick="showPage('reports')">
+                        📥 Export
+                    </button>
+
+                </div>
+
+
+                <!-- CARDS -->
+
+                <div class="cards">
+
+                    <div class="card">
+
+                        <span>💰 Total Income</span>
+
+                        <strong id="income">
+                            ₹0
+                        </strong>
+
+                        <small>
+                            Recorded income
+                        </small>
+
+                    </div>
+
+
+                    <div class="card">
+
+                        <span>💸 Total Spending</span>
+
+                        <strong id="expense">
+                            ₹0
+                        </strong>
+
+                        <small>
+                            All expenses
+                        </small>
+
+                    </div>
+
+
+                    <div class="card">
+
+                        <span>💎 Balance</span>
+
+                        <strong id="balance">
+                            ₹0
+                        </strong>
+
+                        <small>
+                            Income - Expense
+                        </small>
+
+                    </div>
+
+
+                    <div class="card">
+
+                        <span>📅 Today</span>
+
+                        <strong id="today">
+                            ₹0
+                        </strong>
+
+                        <small>
+                            Today's spending
+                        </small>
+
+                    </div>
+
+
+                    <div class="card">
+
+                        <span>📆 This Week</span>
+
+                        <strong id="week">
+                            ₹0
+                        </strong>
+
+                        <small>
+                            Weekly spending
+                        </small>
+
+                    </div>
+
+
+                    <div class="card">
+
+                        <span>🗓️ This Month</span>
+
+                        <strong id="month">
+                            ₹0
+                        </strong>
+
+                        <small>
+                            Monthly spending
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CHARTS -->
+
+                <div class="grid">
+
+                    <div class="panel">
+
+                        <div class="panel-header">
+
+                            <h3>
+                                Spending Overview
+                            </h3>
+
+                            <select>
+
+                                <option>
+                                    Monthly
+                                </option>
+
+                                <option>
+                                    Weekly
+                                </option>
+
+                                <option>
+                                    Daily
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <canvas id="dailyChart"></canvas>
+
+                    </div>
+
+
+                    <div class="panel">
+
+                        <h3>
+                            Category Breakdown
+                        </h3>
+
+                        <canvas id="categoryChart"></canvas>
+
+                    </div>
+
+                </div>
+
+
+                <!-- RECENT -->
+
+                <div class="panel">
+
+                    <div class="panel-header">
+
+                        <h3>
+                            Recent Transactions
+                        </h3>
+
+                        <button class="link-button" onclick="showPage('expenses')">
+                            View All →
+                        </button>
+
+                    </div>
+
+                    <div id="recent"></div>
+
+                </div>
+
+            </section>
+
+
+            <!-- EXPENSE -->
+
+            <section id="expenses" class="page">
+
+                <div class="page-title">
+
+                    <div>
+
+                        <p class="eyebrow">
+                            EXPENSE MANAGEMENT
+                        </p>
+
+                        <h2>
+                            Expenses
+                        </h2>
+
+                    </div>
+
+                    <button class="primary" onclick="openExpense()">
+                        ＋ Add Expense
+                    </button>
+
+                </div>
+
+
+                <div class="filters">
+
+                    <input id="filterText" placeholder="Search...">
+
+                    <input id="fromDate" type="date">
+
+                    <input id="toDate" type="date">
+
+                    <select id="paymentFilter">
+
+                        <option value="">
+                            All Payment Methods
+                        </option>
+
+                        <option>
+                            Cash
+                        </option>
+
+                        <option>
+                            UPI
+                        </option>
+
+                        <option>
+                            Card
+                        </option>
+
+                        <option>
+                            Bank Transfer
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <div id="expenseTable"></div>
+
+                </div>
+
+            </section>
+
+
+            <!-- INCOME -->
+
+            <section id="income" class="page">
+
+                <div class="page-title">
+
+                    <h2>
+                        Income History
+                    </h2>
+
+                    <button class="primary" onclick="openIncome()">
+                        ＋ Add Income
+                    </button>
+
+                </div>
+
+                <div class="panel">
+
+                    <div id="incomeTable"></div>
+
+                </div>
+
+            </section>
+
+
+            <!-- RECURRING -->
+
+            <section id="recurring" class="page">
+
+                <div class="page-title">
+
+                    <h2>
+                        Recurring Expenses
+                    </h2>
+
+                    <button class="primary" onclick="openRecurring()">
+                        ＋ Add Recurring
+                    </button>
+
+                </div>
+
+                <div class="panel">
+
+                    <div id="recurringTable"></div>
+
+                </div>
+
+            </section>
+
+
+            <!-- ANALYTICS -->
+
+            <section id="analytics" class="page">
+
+                <div class="page-title">
+
+                    <h2>
+                        Analytics
+                    </h2>
+
+                </div>
+
+                <div class="grid">
+
+                    <div class="panel">
+
+                        <h3>
+                            Daily Spending
+                        </h3>
+
+                        <canvas id="analyticsDaily"></canvas>
+
+                    </div>
+
+
+                    <div class="panel">
+
+                        <h3>
+                            Payment Methods
+                        </h3>
+
+                        <canvas id="paymentChart"></canvas>
+
+                    </div>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <h3>
+                        Category Analysis
+                    </h3>
+
+                    <div id="categoryRows"></div>
+
+                </div>
+
+            </section>
+
+
+            <!-- AI -->
+
+            <section id="ai" class="page">
+
+                <div class="page-title">
+
+                    <h2>
+                        🤖 AI Spending Analysis
+                    </h2>
+
+                    <span class="ai-badge">
+                        ✦ AI Analysis
+                    </span>
+
+                </div>
+
+
+                <div class="ai-box">
+
+                    <div class="ai-icon">
+                        ✦
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Your Financial Assistant
+                        </h2>
+
+                        <p>
+                            AI-powered insights based on your
+                            recorded spending.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="grid">
+
+                    <div class="panel">
+
+                        <h3>
+                            🤖 Spending Insights
+                        </h3>
+
+                        <div id="tips"></div>
+
+                    </div>
+
+
+                    <div class="panel">
+
+                        <h3>
+                            📈 Spending Prediction
+                        </h3>
+
+                        <div id="prediction" class="prediction">
+                            ₹0
+                        </div>
+
+                        <p>
+                            Estimated spending.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="panel">
+
+                    <h3>
+                        💡 Saving Suggestions
+                    </h3>
+
+                    <div class="suggestion">
+                        🎯 Set category spending limits.
+                    </div>
+
+                    <div class="suggestion">
+                        🔄 Review recurring expenses.
+                    </div>
+
+                    <div class="suggestion">
+                        📊 Compare weekly spending.
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- BUDGET -->
+
+            <section id="budget" class="page">
+
+                <div class="page-title">
+
+                    <h2>
+                        🎯 Budget & Savings
+                    </h2>
+
+                </div>
+
+                <div class="panel budget-form">
+
+                    <label>
+
+                        Monthly Budget
+
+                        <input id="budgetInput" type="number" placeholder="50000">
+
+                    </label>
+
+
+                    <label>
+
+                        Savings Goal
+
+                        <input id="goalInput" type="number" placeholder="10000">
+
+                    </label>
+
+
+                    <button class="primary" onclick="saveBudget()">
+                        Save Budget
+                    </button>
+
+                    <p id="budgetMsg"></p>
+
+                </div>
+
+            </section>
+
+
+            <!-- REPORT -->
+
+            <section id="reports" class="page">
+
+                <div class="page-title">
+
+                    <h2>
+                        📈 Reports & Export
+                    </h2>
+
+                </div>
+
+
+                <div class="export-grid">
+
+                    <button class="export-card" onclick="location.href='/export/excel'">
+
+                        📊
+
+                        <strong>
+                            Download Excel
+                        </strong>
+
+                        <span>
+                            Expense + Income + Category Analysis
+                        </span>
+
+                    </button>
+
+
+                    <button class="export-card" onclick="location.href='/export/pdf'">
+
+                        📄
+
+                        <strong>
+                            Download PDF
+                        </strong>
+
+                        <span>
+                            Printable financial report
+                        </span>
+
+                    </button>
+
+
+                    <button class="export-card" onclick="window.print()">
+
+                        🖨️
+
+                        <strong>
+                            Print Report
+                        </strong>
+
+                        <span>
+                            Print dashboard report
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- CALCULATOR -->
+
+            <section id="calculator" class="page">
+
+                <div class="page-title">
+
+                    <h2>
+                        🧮 Calculator
+                    </h2>
+
+                </div>
+
+
+                <div class="calculator">
+
+                    <input id="calc" readonly>
+
+                    <div id="calcKeys"></div>
+
+                </div>
+
+            </section>
+
+
+            <!-- NOTIFICATION -->
+
+            <section id="notifications" class="page">
+
+                <div class="page-title">
+
+                    <h2>
+                        🔔 Notifications
+                    </h2>
+
+                </div>
+
+                <div class="panel">
+
+                    <div class="notification">
+                        🔔 Budget alerts will appear here.
+                    </div>
+
+                    <div class="notification">
+                        💡 AI insights update automatically.
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- SETTINGS -->
+
+            <section id="settings" class="page">
+
+                <div class="page-title">
+
+                    <h2>
+                        ⚙️ Settings
+                    </h2>
+
+                </div>
+
+
+                <div class="panel settings">
+
+                    <label>
+
+                        Currency
+
+                        <select id="currency">
+
+                            <option value="INR">
+                                ₹ INR
+                            </option>
+
+                            <option value="USD">
+                                $ USD
+                            </option>
+
+                            <option value="EUR">
+                                € EUR
+                            </option>
+
+                        </select>
+
+                    </label>
+
+
+                    <label>
+
+                        Profile Name
+
+                        <input id="profile" value="Arul">
+
+                    </label>
+
+
+                    <button class="primary" onclick="saveSettings()">
+                        Save Settings
+                    </button>
+
+                </div>
+
+            </section>
+
+
+            <!-- HELP -->
+
+            <section id="help" class="page">
+
+                <div class="page-title">
+
+                    <h2>
+                        ❓ Help & Support
+                    </h2>
+
+                </div>
+
+                <div class="grid">
+
+                    <div class="panel">
+
+                        <h3>
+                            How to use
+                        </h3>
+
+                        <p>
+                            First add your income.
+                            Then add expenses.
+                            Use Analytics and AI Analysis
+                            to understand spending patterns.
+                        </p>
+
+                    </div>
+
+
+                    <div class="panel">
+
+                        <h3>
+                            Data Backup
+                        </h3>
+
+                        <p>
+                            Use Excel export regularly
+                            to keep a backup of your data.
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+        </main>
+
+    </div>
+
+
+    <!-- MODAL -->
+
+    <div class="modal" id="modal">
+
+        <div class="modal-box">
+
+            <button class="close" onclick="closeModal()">
+                ×
+            </button>
+
+            <div id="modalBody"></div>
+
+        </div>
+
+    </div>
+
+
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+
+</body>
+
+</html>
